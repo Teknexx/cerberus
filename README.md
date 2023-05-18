@@ -2,6 +2,56 @@
 Cerberus is a Python client-server program to implement a complex port knocking system preventing playback attacks on an exposed server. The program can be used with a password (client need to have root privileges) or without.
 The server need to run the server-side program, and then the client have to use the client-side as Python module to whitelist his IP, with specifying a list of ports to knock synchronised with the server, a port to open after the knocking and a password if password mode is enabled. The whitelist can have Time-To-Leave with a crontab task.
 
+# Usage
+## Server-side
+```bash
+python3 cerberus_server.py config.ini
+```
+Or with the service :
+```bash
+systemctl start cerberus
+```
+
+## Client-side
+In a Python script
+```python
+import cerberus_client as crb
+crb.knocking("DestinationIP", Destination_Port, [Port_list])
+crb.knocking_with_pass("DestinationIP", Destination_Port, [Port_list], "Password") # With root privileges
+```
+
+# Example
+## Server-side
+```bash
+nano /root/cerberus/config_example.ini
+	[GLOBAL]
+	INTERFACE = ens3
+	LOGS_FILE_PATH = /var/cerberus.log
+	REJECT_TIME = 30
+	
+	[PASS]
+	PORT_PASS = 9988, 56, 212
+	MODE_PASS = True
+	PASSWORD = GigaS3cure!
+
+python3 cerberus_server.py config_example.ini
+	INI: 2023-05-18 17:27:11.022107  -  Cerberus started listening
+	...
+```
+
+## Client-side
+In a Python script
+```python
+import cerberus_client as crb
+crb.knocking_with_pass("45.125.76.98", 22, [9988, 56, 212], "GigaS3cure!")
+	Collecting public IP...
+	Collected !
+	Packet with pass sent to port 22 on 45.125.76.98
+	Packet with pass sent to port 9988 on 45.125.76.98
+	Packet with pass sent to port 56 on 45.125.76.98
+	Packet with pass sent to port 212 on 45.125.76.98
+```
+
 # Installation
 ## Automatic
 You can automaticlly install Cerberus with the following command
@@ -91,54 +141,4 @@ Finally, start the service
 systemctl daemon-reload  
 systemctl enable cerberus.service  
 systemctl start cerberus.service
-```
-
-# Usage
-## Server-side
-```bash
-python3 cerberus_server.py config.ini
-```
-Or with the service :
-```bash
-systemctl start cerberus
-```
-
-## Client-side
-In a Python script
-```python
-import cerberus_client as crb
-crb.knocking("DestinationIP", Destination_Port, [Port_list])
-crb.knocking_with_pass("DestinationIP", Destination_Port, [Port_list], "Password") # With root privileges
-```
-
-# Example
-## Server-side
-```bash
-nano /root/cerberus/config_example.ini
-	[GLOBAL]
-	INTERFACE = ens3
-	LOGS_FILE_PATH = /var/cerberus.log
-	REJECT_TIME = 30
-	
-	[PASS]
-	PORT_PASS = 9988, 56, 212
-	MODE_PASS = True
-	PASSWORD = GigaS3cure!
-
-python3 cerberus_server.py config_example.ini
-	INI: 2023-05-18 17:27:11.022107  -  Cerberus started listening
-	...
-```
-
-## Client-side
-In a Python script
-```python
-import cerberus_client as crb
-crb.knocking_with_pass("45.125.76.98", 22, [9988, 56, 212], "GigaS3cure!")
-	Collecting public IP...
-	Collected !
-	Packet with pass sent to port 22 on 45.125.76.98
-	Packet with pass sent to port 9988 on 45.125.76.98
-	Packet with pass sent to port 56 on 45.125.76.98
-	Packet with pass sent to port 212 on 45.125.76.98
 ```
