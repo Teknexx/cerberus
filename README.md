@@ -56,7 +56,7 @@ crb.knocking_with_pass("45.125.76.98", 22, [9988, 56, 212], "GigaS3cure!")
 ## Automatic
 You can automaticlly install Cerberus with the following command
 ```bash
-tar -xzvf cerberus.tar.gz -C /root/cerberus
+tar xf cerberus-main.zip -C /root/cerberus
 cd /root/cerberus
 bash install.sh
 ```
@@ -65,7 +65,7 @@ bash install.sh
 ### Untar
 Untar the file into the root directory
 ```bash
-tar -xzvf cerberus.tar.gz -C /root/cerberus
+tar xf cerberus-main.zip -C /root/cerberus
 cd /root/cerberus
 ```
 
