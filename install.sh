@@ -1,7 +1,9 @@
 #!/bin/bash
 
+apt update && apt upgrade
+apt install python3-pip
 echo "Installing python module"
-python3 -m pip install scapy requests
+pip3 install scapy requests
 
 read -p "Do you wan to create a cron task to reset iptables rules every hours (y/n) ? " choise
 if [ "$choise" = "y" ]; then
