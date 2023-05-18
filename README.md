@@ -26,7 +26,7 @@ crb.knocking_with_pass("DestinationIP", Destination_Port, [Port_list], "Password
 nano /root/cerberus/config_example.ini
 	[GLOBAL]
 	INTERFACE = ens3
-	LOGS_FILE_PATH = /var/cerberus.log
+	LOGS_FILE_PATH = /var/log/cerberus.log
 	REJECT_TIME = 30
 	
 	[PASS]
@@ -54,10 +54,12 @@ crb.knocking_with_pass("45.125.76.98", 22, [9988, 56, 212], "GigaS3cure!")
 
 # Installation
 ## Automatic
-You can automaticlly install Cerberus with the following command
+You can automaticlly install Cerberus with the following commands:
+1. First modify the config.ini with your parameters
+2. Execute the install.sh file
 ```bash
-tar xf cerberus-main.zip -C /root/cerberus
-cd /root/cerberus
+unzip cerberus-main.zip
+mv /root/cerberus-main /root/cerberus && cd /root/cerberus
 bash install.sh
 ```
 
@@ -65,8 +67,8 @@ bash install.sh
 ### Untar
 Untar the file into the root directory
 ```bash
-tar xf cerberus-main.zip -C /root/cerberus
-cd /root/cerberus
+unzip cerberus-main.zip
+mv /root/cerberus-main /root/cerberus && cd /root/cerberus
 ```
 
 ### Install Python dependencies
@@ -131,7 +133,7 @@ Type=simple
 Restart=always  
 RestartSec=1  
 User=root  
-ExecStart=bash /root/cerberus/start_cerberus_service  
+ExecStart=/bin/sh /root/cerberus/start_cerberus_service  
   
 [Install]  
 WantedBy=multi-user.target
