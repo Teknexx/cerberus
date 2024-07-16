@@ -16,8 +16,11 @@ systemctl start cerberus
 In a Python script
 ```python
 import cerberus_client as crb
-crb.knocking("DestinationIP", Destination_Port, [Port_list])
-crb.knocking_with_pass("DestinationIP", Destination_Port, [Port_list], "Password") # With root privileges
+crb.knocking("Destination_IP", Destination_Port, [Port_list])
+crb.knocking_with_pass("Destination_IP", Destination_Port, [Port_list], "Password") # With root privileges
+
+# If the server is in a LAN, you can add the interface (eth0, ens192...) like this (only with password):
+crb.knocking_with_pass("Destination_IP", Destination_Port, [Port_list], "Password", "Interface") # Need root privileges !
 ```
 
 # Example

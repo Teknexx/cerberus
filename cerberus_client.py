@@ -5,6 +5,7 @@ from scapy.all import *
 from datetime import datetime
 from hashlib import sha256
 from requests import get
+from subprocess import check_output
 import signal
 
 
@@ -74,11 +75,19 @@ def knocking(hostname, port_to_open, ports_list):
         signal.setitimer(signal.ITIMER_REAL, 0)
 
 
-def knocking_with_pass(hostname, port_to_open, ports_list, pass_string):
-    # Get the host public IP
-    print("Collecting public IP...")
-    source_ip = get('https://api.ipify.org').content.decode('utf8')
-    print("Collected !")
+def knocking_with_pass(hostname, port_to_open, ports_list, pass_string, interface="wan"):
+    # Getting the source IP
+    if interface == "wan":
+        # If WAN server
+        print("Collecting public IP...")
+        source_ip = get('https://api.ipify.org').content.decode('utf8')
+        print("Collected !")
+    else :
+        # If LAN server
+        print("Collecting local IP...")
+        source_ip = check_output("ip addr show eth0 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1", shell=True).decode('utf-8').strip()
+        print("Collected !")
+    print(source_ip)
 
     # Adding the port to open to port list
     ports_list.insert(0, port_to_open)
@@ -100,14 +109,17 @@ def help():
         This file should not be executed directly.
    Use this file as a module like the following example:
 
-Into Python script:
+Into a Python script:
     import cerberus_client as crb
-    crb.knocking("127.0.0.1", 8080, [1111, 2222, 3333, 4444, 5555])
+    crb.knocking("1.2.3.4", 8080, [1111, 2222, 3333, 4444, 5555])
     crb.knocking_with_pass("45.125.76.98", 22, [123, 456], "P@ssword123") # Need root privileges !
 
 Format:
-    crb.knocking("DestinationIP", Destination_Port, [Port_list])
-    crb.knocking_with_pass("DestinationIP", Destination_Port, [Port_list], "Password") # Need root privileges !
+    crb.knocking("Destination_IP", Destination_Port, [Port_list])
+    crb.knocking_with_pass("Destination_IP", Destination_Port, [Port_list], "Password") # Need root privileges !
+    
+If the server is in a LAN, you can add the interface (eth0, ens192...) like this (only with password):
+    crb.knocking_with_pass("Destination_IP", Destination_Port, [Port_list], "Password", "Interface") # Need root privileges !
 """)
 
 
